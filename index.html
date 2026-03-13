@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Viraamam Café — Ecosystem Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#5b8f8f;--teal-d:#3d6b6b;--gold:#c9a84c;--brown:#5c3d2e;--cream:#f5f0e8;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:linear-gradient(160deg,#060f0f 0%,#0b1a1a 40%,#132a2a 100%);min-height:100vh;color:#e8f0f0;padding:2rem 1.5rem;}
+.hub{max-width:900px;margin:0 auto;}
+.hub-hero{text-align:center;padding:3rem 0 2.5rem;}
+.logo{font-size:4.5rem;margin-bottom:1rem;}
+h1{font-family:'Playfair Display',serif;font-size:clamp(2.4rem,6vw,4rem);color:var(--gold);margin-bottom:.5rem;}
+h1 em{font-style:italic;color:rgba(232,213,160,.7);}
+.hero-sub{color:rgba(168,200,200,.65);font-size:1rem;max-width:500px;margin:0 auto 2.5rem;}
+
+/* FLOW */
+.flow{display:flex;align-items:center;justify-content:center;gap:.5rem;flex-wrap:wrap;margin-bottom:3rem;}
+.flow-step{background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.2);border-radius:12px;padding:.6rem 1rem;font-size:.82rem;font-weight:600;color:rgba(168,200,200,.8);display:flex;align-items:center;gap:.4rem;}
+.flow-arrow{color:rgba(201,168,76,.4);font-size:1rem;}
+
+/* APP CARDS */
+.apps{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-bottom:3rem;}
+@media(max-width:700px){.apps{grid-template-columns:1fr;}}
+.app-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:1.8rem 1.5rem;text-align:center;transition:all .35s;cursor:pointer;text-decoration:none;color:inherit;display:block;}
+.app-card:hover{background:rgba(255,255,255,.08);transform:translateY(-6px);box-shadow:0 20px 48px rgba(0,0,0,.4);}
+.app-card.c{border-color:rgba(91,143,143,.35);}
+.app-card.s{border-color:rgba(139,92,246,.35);}
+.app-card.d{border-color:rgba(249,115,22,.35);}
+.ac-icon{font-size:3.2rem;margin-bottom:1rem;display:block;}
+.ac-name{font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:.4rem;}
+.app-card.c .ac-name{color:#5b8f8f;}
+.app-card.s .ac-name{color:#a78bfa;}
+.app-card.d .ac-name{color:#fb923c;}
+.ac-desc{font-size:.82rem;color:rgba(168,200,200,.6);line-height:1.5;margin-bottom:1.2rem;}
+.ac-creds{background:rgba(255,255,255,.05);border-radius:8px;padding:.55rem .8rem;font-size:.75rem;font-family:'Courier New',monospace;color:rgba(201,168,76,.75);text-align:left;margin-bottom:1.2rem;}
+.ac-btn{display:inline-block;padding:.75rem 1.6rem;border-radius:50px;font-size:.85rem;font-weight:700;text-decoration:none;transition:all .3s;}
+.app-card.c .ac-btn{background:linear-gradient(135deg,#5b8f8f,#3d6b6b);color:#fff;}
+.app-card.s .ac-btn{background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;}
+.app-card.d .ac-btn{background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;}
+.ac-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.35);}
+
+/* HOW IT WORKS */
+.how{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:20px;padding:2rem 1.8rem;margin-bottom:2.5rem;}
+.how h2{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.5rem;margin-bottom:1.5rem;text-align:center;}
+.steps-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+@media(max-width:600px){.steps-grid{grid-template-columns:1fr;}}
+.step-item{display:flex;gap:.8rem;align-items:flex-start;}
+.step-num{width:32px;height:32px;border-radius:50%;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.35);color:var(--gold);font-size:.82rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-text strong{display:block;font-size:.88rem;color:#e8f0f0;margin-bottom:.15rem;}
+.step-text span{font-size:.78rem;color:rgba(168,200,200,.55);line-height:1.4;}
+
+/* TECH */
+.tech{text-align:center;padding:1rem 0 2rem;}
+.tech p{font-size:.82rem;color:rgba(168,200,200,.4);line-height:1.8;}
+.tech strong{color:rgba(168,200,200,.65);}
+</style>
+</head>
+<body>
+<div class="hub">
+  <div class="hub-hero">
+    <div class="logo">☕</div>
+    <h1>Viraamam <em>Ecosystem</em></h1>
+    <p class="hero-sub">Three connected apps. One real-time system. Open all three in separate browser tabs.</p>
+
+    <div class="flow">
+      <div class="flow-step">👤 Customer Orders</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step">👨‍🍳 Kitchen Prepares</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step">🛵 Rider Delivers</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step">🏠 Customer Tracks Live</div>
+    </div>
+  </div>
+
+  <div class="apps">
+    <a class="app-card c" href="customer-app.html" target="_blank">
+      <span class="ac-icon">🛍️</span>
+      <div class="ac-name">Customer App</div>
+      <div class="ac-desc">Order food, track delivery live, see rider details in real-time.</div>
+      <div class="ac-creds">No login required<br>Browse menu → Order → Track</div>
+      <span class="ac-btn">Open Customer App →</span>
+    </a>
+    <a class="app-card s" href="staff-dashboard.html" target="_blank">
+      <span class="ac-icon">👨‍🍳</span>
+      <div class="ac-name">Staff Dashboard</div>
+      <div class="ac-desc">Kitchen kanban board. Confirm orders, start cooking, mark ready.</div>
+      <div class="ac-creds">staff1 / kitchen123<br>or staff2 / kitchen123</div>
+      <span class="ac-btn">Open Staff Panel →</span>
+    </a>
+    <a class="app-card d" href="delivery-app.html" target="_blank">
+      <span class="ac-icon">🛵</span>
+      <div class="ac-name">Rider App</div>
+      <div class="ac-desc">Mobile-first. Accept orders, pick up, deliver, track earnings.</div>
+      <div class="ac-creds">Any phone number<br>OTP: 1234 (demo)</div>
+      <span class="ac-btn">Open Rider App →</span>
+    </a>
+  </div>
+
+  <div class="how">
+    <h2>How to Test the Full Flow</h2>
+    <div class="steps-grid">
+      <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Open all 3 apps in separate tabs</strong><span>Click each card above. They must be in the same browser window to share data.</span></div></div>
+      <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Login to Staff Dashboard</strong><span>Use staff1 / kitchen123. You'll see the kanban board with live notifications.</span></div></div>
+      <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Login to Rider App</strong><span>Enter any phone number, OTP is 1234. Go Online. The app is mobile-optimised.</span></div></div>
+      <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Place an order on Customer App</strong><span>Add items to cart, checkout with any payment method, watch tracking screen appear.</span></div></div>
+      <div class="step-item"><div class="step-num">5</div><div class="step-text"><strong>Staff confirms → cooks → marks ready</strong><span>In Staff Dashboard, click Confirm → Start Cooking → Mark Ready. Watch Customer App update instantly.</span></div></div>
+      <div class="step-item"><div class="step-num">6</div><div class="step-text"><strong>Rider accepts & delivers</strong><span>In Rider App (Home tab) the order appears. Accept → At Café → Picked Up → Delivered. Watch everything sync.</span></div></div>
+    </div>
+  </div>
+
+  <div class="tech">
+    <p>
+      <strong>Real-time sync:</strong> BroadcastChannel API (instant cross-tab messaging, no server needed) &nbsp;·&nbsp;
+      <strong>Database:</strong> localStorage (persists across tabs in same browser) &nbsp;·&nbsp;
+      <strong>Zero dependencies:</strong> Pure HTML + CSS + JS · No frameworks · No backend required
+    </p>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Viraamam Café — Kitchen Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b1a1a;--bg2:#0f2222;--bg3:#132a2a;
+  --teal:#5b8f8f;--teal-d:#3d6b6b;--teal-l:#a8c8c8;
+  --gold:#c9a84c;--gold-l:#e8d5a0;--cream:#f5f0e8;
+  --brown:#5c3d2e;--white:#fff;
+  --new:#f59e0b;--confirm:#3b82f6;--prep:#8b5cf6;
+  --ready:#06b6d4;--riding:#f97316;--done:#10b981;--danger:#ef4444;
+  --card:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.08);
+  --r:14px;--r-sm:8px;--shadow:0 4px 20px rgba(0,0,0,0.3);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:#e8f0f0;min-height:100vh;overflow-x:hidden;}
+button{font-family:inherit;cursor:pointer;}
+
+/* ── LOGIN ── */
+#login{position:fixed;inset:0;background:linear-gradient(135deg,#071212,#0f2222,#1a3a3a);display:flex;align-items:center;justify-content:center;z-index:1000;padding:1rem;}
+.login-box{background:rgba(255,255,255,0.04);backdrop-filter:blur(24px);border:1px solid rgba(201,168,76,0.25);border-radius:24px;padding:3rem 2.5rem;width:100%;max-width:400px;text-align:center;}
+.login-box .logo{font-size:3.5rem;margin-bottom:1rem;}
+.login-box h1{font-family:'Playfair Display',serif;color:var(--gold);font-size:2rem;margin-bottom:0.25rem;}
+.login-box .sub{color:rgba(168,200,200,0.6);font-size:0.88rem;margin-bottom:2rem;}
+.lf{margin-bottom:1.1rem;text-align:left;}
+.lf label{display:block;font-size:0.73rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(168,200,200,0.7);margin-bottom:.4rem;}
+.lf input{width:100%;padding:.85rem 1rem;background:rgba(255,255,255,0.06);border:1.5px solid rgba(168,200,200,0.2);border-radius:var(--r-sm);color:#fff;font-size:.95rem;font-family:inherit;outline:none;transition:border-color .2s;}
+.lf input::placeholder{color:rgba(255,255,255,.25);}
+.lf input:focus{border-color:var(--gold);}
+.login-btn{width:100%;padding:1rem;background:linear-gradient(135deg,var(--gold),#b8953a);color:var(--brown);border:none;border-radius:50px;font-size:1rem;font-weight:700;transition:all .3s;margin-top:.5rem;}
+.login-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,168,76,.4);}
+.hint{color:rgba(168,200,200,.45);font-size:.76rem;margin-top:1rem;}
+.hint strong{color:rgba(168,200,200,.8);}
+
+/* ── TOP BAR ── */
+#topbar{background:rgba(11,26,26,.98);border-bottom:1px solid rgba(201,168,76,.15);padding:0 1.5rem;height:60px;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100;}
+.tb-brand{display:flex;align-items:center;gap:.7rem;}
+.tb-icon{font-size:1.7rem;}
+.tb-name{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.1rem;}
+.tb-sub{font-size:.7rem;color:rgba(168,200,200,.5);letter-spacing:.1em;text-transform:uppercase;}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:.9rem;}
+.live-badge{background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.35);color:#6ee7b7;padding:.28rem .8rem;border-radius:50px;font-size:.72rem;font-weight:700;display:flex;align-items:center;gap:.4rem;}
+.live-dot{width:6px;height:6px;background:#10b981;border-radius:50%;animation:pd 2s infinite;}
+@keyframes pd{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(1.6);}}
+.tb-clock{color:rgba(168,200,200,.55);font-size:.8rem;font-weight:600;}
+.tb-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(168,200,200,.65);padding:.32rem .75rem;border-radius:6px;font-size:.78rem;transition:all .2s;}
+.tb-btn:hover{background:rgba(255,255,255,.1);color:#fff;}
+.tb-btn.danger:hover{border-color:var(--danger);color:var(--danger);}
+
+/* ── STATS ROW ── */
+#stats{background:rgba(255,255,255,.02);border-bottom:1px solid var(--border);padding:1rem 1.5rem;display:flex;gap:.9rem;overflow-x:auto;}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.75rem 1.3rem;min-width:120px;flex-shrink:0;text-align:center;}
+.stat-n{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;line-height:1;}
+.stat-l{font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(168,200,200,.55);margin-top:.15rem;}
+.stat.s-new .stat-n{color:var(--new);}
+.stat.s-prep .stat-n{color:var(--prep);}
+.stat.s-ready .stat-n{color:var(--ready);}
+.stat.s-done .stat-n{color:var(--done);}
+.stat.s-rev .stat-n{color:var(--gold);}
+
+/* ── KANBAN ── */
+#board{padding:1.2rem 1.5rem;display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;min-height:calc(100vh - 120px);}
+@media(max-width:1200px){#board{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:640px){#board{grid-template-columns:1fr;}}
+
+.col{display:flex;flex-direction:column;}
+.col-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem;padding-bottom:.65rem;border-bottom:2px solid rgba(255,255,255,.07);}
+.col-title{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;display:flex;align-items:center;gap:.5rem;}
+.col-badge{background:rgba(255,255,255,.1);border-radius:50px;padding:.12rem .55rem;font-size:.68rem;font-weight:700;}
+.col-new .col-title{color:var(--new);}
+.col-prep .col-title{color:var(--prep);}
+.col-ready .col-title{color:var(--ready);}
+.col-done .col-title{color:var(--done);}
+
+.cards{display:flex;flex-direction:column;gap:.85rem;}
+.empty{text-align:center;padding:2.5rem 1rem;color:rgba(168,200,200,.3);}
+.empty-i{font-size:2.2rem;margin-bottom:.5rem;}
+.empty p{font-size:.8rem;}
+
+/* ── ORDER CARD ── */
+.ocard{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:var(--r);padding:1rem 1.05rem;transition:all .3s;animation:sIn .35s ease;}
+@keyframes sIn{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+.ocard:hover{background:rgba(255,255,255,.07);transform:translateY(-2px);}
+.ocard.s-new{border-left:3px solid var(--new);}
+.ocard.s-confirmed,.ocard.s-preparing{border-left:3px solid var(--prep);}
+.ocard.s-ready{border-left:3px solid var(--ready);}
+.ocard.s-picked_up,.ocard.s-delivered{border-left:3px solid var(--done);}
+.ocard.s-rejected{border-left:3px solid var(--danger);opacity:.55;}
+
+.oc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem;}
+.oc-id{font-family:'Playfair Display',serif;font-size:.9rem;color:var(--gold);font-weight:700;}
+.oc-ago{font-size:.67rem;color:rgba(168,200,200,.42);}
+.oc-customer{font-size:.83rem;font-weight:600;color:#e8f0f0;margin-bottom:.3rem;display:flex;align-items:center;gap:.35rem;}
+.oc-mode{font-size:.65rem;background:rgba(91,143,143,.2);color:var(--teal-l);padding:.1rem .45rem;border-radius:4px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
+.oc-items{font-size:.75rem;color:rgba(168,200,200,.65);margin-bottom:.4rem;line-height:1.5;}
+.oc-addr{font-size:.7rem;color:rgba(168,200,200,.45);margin-bottom:.55rem;padding-left:.9rem;position:relative;line-height:1.4;}
+.oc-addr::before{content:'📍';position:absolute;left:0;font-size:.65rem;}
+.oc-total{font-size:.78rem;font-weight:700;color:var(--gold);margin-bottom:.75rem;}
+.oc-status{display:inline-flex;align-items:center;gap:.35rem;padding:.2rem .6rem;border-radius:50px;font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.75rem;}
+
+/* ACTION BUTTONS */
+.oc-actions{display:flex;flex-direction:column;gap:.45rem;}
+.ab{width:100%;padding:.7rem 1rem;border:none;border-radius:var(--r-sm);font-size:.83rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:.45rem;}
+.ab:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 5px 14px rgba(0,0,0,.35);}
+.ab:disabled{opacity:.35;cursor:not-allowed;}
+.ab-confirm{background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;}
+.ab-cook{background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;}
+.ab-done{background:linear-gradient(135deg,#06b6d4,#0284c7);color:#fff;}
+.ab-reject{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.25);color:#fca5a5;}
+.ab-reject:hover{background:rgba(239,68,68,.22)!important;}
+.ab-pending{background:rgba(255,255,255,.06);color:rgba(168,200,200,.6);font-style:italic;cursor:default;}
+.ab-pending:hover{transform:none!important;box-shadow:none!important;}
+
+/* TIMER BADGE (urgent if >10 min) */
+.timer-badge{display:inline-block;padding:.12rem .5rem;border-radius:4px;font-size:.65rem;font-weight:700;margin-left:.4rem;}
+.timer-badge.ok{background:rgba(16,185,129,.15);color:#6ee7b7;}
+.timer-badge.warn{background:rgba(245,158,11,.15);color:#fcd34d;}
+.timer-badge.hot{background:rgba(239,68,68,.15);color:#fca5a5;animation:flash .8s steps(1) infinite;}
+@keyframes flash{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+/* NOTIFICATIONS */
+#notifs{position:fixed;top:70px;right:1.2rem;z-index:500;display:flex;flex-direction:column;gap:.55rem;pointer-events:none;}
+.notif{background:rgba(11,26,26,.97);border:1px solid rgba(201,168,76,.25);border-radius:12px;padding:.85rem 1.1rem;max-width:300px;display:flex;align-items:flex-start;gap:.7rem;animation:nIn .35s cubic-bezier(.34,1.56,.64,1);box-shadow:0 8px 24px rgba(0,0,0,.5);}
+@keyframes nIn{from{opacity:0;transform:translateX(16px);}to{opacity:1;transform:translateX(0);}}
+.notif.n-new{border-color:rgba(245,158,11,.5);}
+.notif.n-rider{border-color:rgba(249,115,22,.5);}
+.notif-icon{font-size:1.3rem;flex-shrink:0;}
+.notif-title{font-size:.8rem;font-weight:700;color:#fff;margin-bottom:.18rem;}
+.notif-sub{font-size:.72rem;color:rgba(168,200,200,.65);}
+
+/* TOAST */
+#toasts{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:.5rem;align-items:center;pointer-events:none;}
+.toast{background:rgba(11,26,26,.97);border:1px solid rgba(201,168,76,.3);color:#fff;padding:.65rem 1.4rem;border-radius:50px;font-size:.85rem;font-weight:600;animation:tIn .35s ease;white-space:nowrap;}
+@keyframes tIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.toast.ok{border-color:rgba(16,185,129,.5);color:#6ee7b7;}
+.toast.err{border-color:rgba(239,68,68,.5);color:#fca5a5;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="login-box">
+    <div class="logo">👨‍🍳</div>
+    <h1>Kitchen Panel</h1>
+    <div class="sub">Viraamam Café — Staff Access</div>
+    <div class="lf"><label>Staff ID</label><input type="text" id="lu" placeholder="staff1" value="staff1"></div>
+    <div class="lf"><label>Password</label><input type="password" id="lp" placeholder="••••••••" value="kitchen123" onkeydown="if(e.key==='Enter')doLogin()"></div>
+    <button class="login-btn" onclick="doLogin()">Sign In to Kitchen →</button>
+    <p class="hint">Demo: <strong>staff1 / kitchen123</strong></p>
+  </div>
+</div>
+
+<!-- TOP BAR -->
+<div id="topbar" style="display:none">
+  <div class="tb-brand">
+    <span class="tb-icon">☕</span>
+    <div><div class="tb-name">Viraamam Café</div><div class="tb-sub">Kitchen Dashboard</div></div>
+  </div>
+  <div class="tb-right">
+    <div class="live-badge"><span class="live-dot"></span>Live</div>
+    <span class="tb-clock" id="clock">—</span>
+    <button class="tb-btn" onclick="seedDemo()" title="Add demo order">＋ Demo Order</button>
+    <button class="tb-btn danger" onclick="doLogout()">Logout</button>
+  </div>
+</div>
+
+<!-- STATS -->
+<div id="stats" style="display:none">
+  <div class="stat s-new"><div class="stat-n" id="sn-new">0</div><div class="stat-l">New</div></div>
+  <div class="stat s-prep"><div class="stat-n" id="sn-prep">0</div><div class="stat-l">Preparing</div></div>
+  <div class="stat s-ready"><div class="stat-n" id="sn-ready">0</div><div class="stat-l">Ready</div></div>
+  <div class="stat s-done"><div class="stat-n" id="sn-done">0</div><div class="stat-l">Delivered Today</div></div>
+  <div class="stat s-rev"><div class="stat-n" id="sn-rev">₹0</div><div class="stat-l">Revenue Today</div></div>
+</div>
+
+<!-- BOARD -->
+<div id="board" style="display:none">
+  <div class="col col-new">
+    <div class="col-hdr"><div class="col-title">🟡 New Orders <span class="col-badge" id="cb-new">0</span></div></div>
+    <div class="cards" id="col-new"></div>
+  </div>
+  <div class="col col-prep">
+    <div class="col-hdr"><div class="col-title">🟣 Preparing <span class="col-badge" id="cb-prep">0</span></div></div>
+    <div class="cards" id="col-prep"></div>
+  </div>
+  <div class="col col-ready">
+    <div class="col-hdr"><div class="col-title">🔵 Ready / Pickup <span class="col-badge" id="cb-ready">0</span></div></div>
+    <div class="cards" id="col-ready"></div>
+  </div>
+  <div class="col col-done">
+    <div class="col-hdr"><div class="col-title">🟢 Completed <span class="col-badge" id="cb-done">0</span></div></div>
+    <div class="cards" id="col-done"></div>
+  </div>
+</div>
+
+<div id="notifs"></div>
+<div id="toasts"></div>
+
+<script>
+// ══════════════════════════════════════════════
+// SYNC ENGINE
+// ══════════════════════════════════════════════
+const DB='viraamam_orders',CH='viraamam_sync';
+let bc,loggedIn=false;
+
+function getOrders(){try{return JSON.parse(localStorage.getItem(DB)||'[]');}catch{return[];}}
+function saveOrders(o){localStorage.setItem(DB,JSON.stringify(o));}
+function updOrder(id,status,extra={}){
+  const orders=getOrders(),i=orders.findIndex(o=>o.id===id);
+  if(i===-1)return null;
+  orders[i]={...orders[i],status,updatedAt:new Date().toISOString(),...extra};
+  saveOrders(orders);bc.postMessage({type:'ORDER_UPDATED',payload:orders[i]});
+  return orders[i];
+}
+
+// ══════════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════════
+function doLogin(){
+  const u=document.getElementById('lu').value.trim(),p=document.getElementById('lp').value.trim();
+  if((u==='staff1'||u==='staff2')&&p==='kitchen123'){
+    loggedIn=true;
+    document.getElementById('login').style.display='none';
+    ['topbar','stats','board'].forEach(id=>document.getElementById(id).style.display='');
+    document.getElementById('board').style.display='grid';
+    init();
+  } else {
+    shake(document.querySelector('.login-box'));
+    toast('Invalid credentials','err');
+  }
+}
+function doLogout(){
+  loggedIn=false;
+  document.getElementById('login').style.display='flex';
+  ['topbar','stats','board'].forEach(id=>document.getElementById(id).style.display='none');
+}
+function shake(el){el.style.animation='';void el.offsetWidth;el.style.animation='shake .4s ease';setTimeout(()=>el.style.animation='',400);}
+const style=document.createElement('style');style.textContent='@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}';document.head.appendChild(style);
+
+// ══════════════════════════════════════════════
+// CLOCK
+// ══════════════════════════════════════════════
+function tick(){document.getElementById('clock').textContent=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});}
+setInterval(tick,1000);tick();
+
+// ══════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════
+function ago(iso){
+  const d=Math.floor((Date.now()-new Date(iso))/1000);
+  if(d<60)return d+'s ago';if(d<3600)return Math.floor(d/60)+'m ago';return Math.floor(d/3600)+'h ago';
+}
+function minAgo(iso){return Math.floor((Date.now()-new Date(iso))/60000);}
+function timerBadge(iso){
+  const m=minAgo(iso);
+  if(m<8)return`<span class="timer-badge ok">⏱ ${m}m</span>`;
+  if(m<15)return`<span class="timer-badge warn">⏱ ${m}m</span>`;
+  return`<span class="timer-badge hot">🔥 ${m}m</span>`;
+}
+const SM={
+  new:      {label:'New Order', color:'#f59e0b',bg:'rgba(245,158,11,.15)'},
+  confirmed:{label:'Confirmed', color:'#3b82f6',bg:'rgba(59,130,246,.15)'},
+  preparing:{label:'Preparing', color:'#8b5cf6',bg:'rgba(139,92,246,.15)'},
+  ready:    {label:'Ready',     color:'#06b6d4',bg:'rgba(6,182,212,.15)'},
+  picked_up:{label:'Picked Up', color:'#f97316',bg:'rgba(249,115,22,.15)'},
+  delivered:{label:'Delivered', color:'#10b981',bg:'rgba(16,185,129,.15)'},
+  rejected: {label:'Rejected',  color:'#ef4444',bg:'rgba(239,68,68,.15)'},
+};
+
+// ══════════════════════════════════════════════
+// RENDER CARD
+// ══════════════════════════════════════════════
+function renderCard(o){
+  const s=SM[o.status]||SM.new;
+  const items=(o.items||[]).map(i=>`${i.qty}× ${i.name}`).join(' · ');
+  const total=o.total?`₹${o.total}`:'';
+  let actions='';
+  if(o.status==='new'){
+    actions=`<button class="ab ab-confirm" onclick="act('${o.id}','confirmed')">✅ Confirm Order</button>
+             <button class="ab ab-reject" onclick="rej('${o.id}')">✕ Reject</button>`;
+  } else if(o.status==='confirmed'){
+    actions=`<button class="ab ab-cook" onclick="act('${o.id}','preparing')">🍳 Start Cooking</button>`;
+  } else if(o.status==='preparing'){
+    actions=`<button class="ab ab-done" onclick="act('${o.id}','ready')">🍱 Mark Ready for Pickup</button>`;
+  } else if(o.status==='ready'){
+    actions=`<div class="ab ab-pending">⏳ Awaiting delivery partner…</div>`;
+  } else if(o.status==='picked_up'){
+    actions=`<div class="ab ab-pending">🛵 ${o.rider||'Rider'} is on the way</div>`;
+  } else if(o.status==='delivered'){
+    actions=`<div class="ab ab-pending" style="color:rgba(110,231,183,.6)">✅ Delivered successfully</div>`;
+  }
+  return `<div class="ocard s-${o.status}" id="oc-${o.id}">
+    <div class="oc-head">
+      <span class="oc-id">${o.id.substring(0,12)}</span>
+      <span class="oc-ago">${ago(o.createdAt)} ${timerBadge(o.createdAt)}</span>
+    </div>
+    <div class="oc-customer">
+      👤 ${o.customerName||'Customer'}
+      <span class="oc-mode">${o.mode||'delivery'}</span>
+      ${o.phone?`<span style="font-size:.68rem;color:rgba(168,200,200,.4);font-weight:400;">${o.phone}</span>`:''}
+    </div>
+    <div class="oc-items">${items||'—'}</div>
+    ${o.address?`<div class="oc-addr">${o.address}</div>`:''}
+    ${total?`<div class="oc-total">${total}</div>`:''}
+    <span class="oc-status" style="color:${s.color};background:${s.bg};">${s.label}</span>
+    <div class="oc-actions">${actions}</div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════
+// RENDER ALL
+// ══════════════════════════════════════════════
+function renderAll(){
+  if(!loggedIn)return;
+  const orders=getOrders();
+  const today=new Date().toDateString();
+
+  const cols={new:[],prep:[],ready:[],done:[]};
+  let rev=0;
+  orders.forEach(o=>{
+    if(o.status==='new'||o.status==='confirmed')cols.new.push(o);
+    else if(o.status==='preparing')cols.prep.push(o);
+    else if(o.status==='ready')cols.ready.push(o);
+    else if((o.status==='picked_up'||o.status==='delivered')&&new Date(o.updatedAt||o.createdAt).toDateString()===today){
+      cols.done.push(o);
+      if(o.status==='delivered')rev+=o.total||0;
+    }
+  });
+
+  const todayDel=orders.filter(o=>o.status==='delivered'&&new Date(o.updatedAt).toDateString()===today).length;
+  document.getElementById('sn-new').textContent=cols.new.length;
+  document.getElementById('sn-prep').textContent=cols.prep.length;
+  document.getElementById('sn-ready').textContent=cols.ready.length;
+  document.getElementById('sn-done').textContent=todayDel;
+  document.getElementById('sn-rev').textContent='₹'+rev;
+
+  const map={new:'col-new',prep:'col-prep',ready:'col-ready',done:'col-done'};
+  const cntMap={new:'cb-new',prep:'cb-prep',ready:'cb-ready',done:'cb-done'};
+  const empties={new:'🎉 No new orders',prep:'⏳ Nothing cooking',ready:'🍱 Nothing ready yet',done:'📋 No completions yet'};
+  Object.entries(cols).forEach(([k,list])=>{
+    document.getElementById(cntMap[k]).textContent=list.length;
+    const el=document.getElementById(map[k]);
+    el.innerHTML=list.length?list.map(renderCard).join(''):`<div class="empty"><div class="empty-i">${['🎉','⏳','🍱','📋'][['new','prep','ready','done'].indexOf(k)]}</div><p>${empties[k]}</p></div>`;
+  });
+}
+
+// ══════════════════════════════════════════════
+// ACTIONS
+// ══════════════════════════════════════════════
+const ACT_LABELS={confirmed:'Order Confirmed',preparing:'Cooking Started',ready:'Ready for Pickup'};
+function act(id,status){
+  const o=updOrder(id,status);
+  if(o){toast(ACT_LABELS[status]||status+' ✓','ok');}
+  renderAll();
+}
+function rej(id){
+  if(!confirm('Reject this order? Customer will be notified.'))return;
+  const orders=getOrders(),i=orders.findIndex(o=>o.id===id);
+  if(i===-1)return;
+  orders[i]={...orders[i],status:'rejected',updatedAt:new Date().toISOString()};
+  saveOrders(orders);bc.postMessage({type:'ORDER_UPDATED',payload:orders[i]});
+  toast('Order rejected','err');renderAll();
+}
+
+// ══════════════════════════════════════════════
+// NOTIFICATIONS
+// ══════════════════════════════════════════════
+function notify(title,sub,type=''){
+  const stack=document.getElementById('notifs');
+  const el=document.createElement('div');el.className=`notif n-${type}`;
+  el.innerHTML=`<span class="notif-icon">${type==='new'?'🛎️':type==='rider'?'🛵':'📦'}</span><div><div class="notif-title">${title}</div><div class="notif-sub">${sub}</div></div>`;
+  stack.appendChild(el);
+  beep(type==='new'?880:660);
+  setTimeout(()=>{el.style.transition='opacity .4s';el.style.opacity='0';setTimeout(()=>el.remove(),400);},5000);
+}
+function beep(f=880){
+  try{const a=new AudioContext();const o=a.createOscillator();const g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=f;g.gain.setValueAtTime(.3,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.4);o.start();o.stop(a.currentTime+.4);}catch{}
+}
+
+// ══════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════
+function toast(msg,type=''){
+  const el=document.createElement('div');el.className='toast'+(type?' '+type:'');el.textContent=msg;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(()=>{el.style.transition='opacity .4s';el.style.opacity='0';setTimeout(()=>el.remove(),400);},3000);
+}
+
+// ══════════════════════════════════════════════
+// SEED DEMO
+// ══════════════════════════════════════════════
+function seedDemo(){
+  const demos=[
+    {customerName:'Priya Sharma',phone:'9876543210',items:[{name:'Margherita Pizza',qty:1},{name:'Veg Momos',qty:2}],total:370,address:'14/2 Balaji Nagar, Chennai',mode:'delivery'},
+    {customerName:'Arjun Reddy',phone:'9845678901',items:[{name:'Cheese Burst Burger',qty:2},{name:'Oreo Milkshake',qty:2}],total:476,address:'Plot 7, Anna Nagar, Chennai',mode:'delivery'},
+    {customerName:'Seetha Lakshmi',phone:'9765432109',items:[{name:'SPL Mango Bubble Tea',qty:2}],total:290,address:'Dine In – Table 4',mode:'dine'},
+  ];
+  const d=demos[Math.floor(Math.random()*demos.length)];
+  const orders=getOrders();
+  const o={...d,id:'VC-'+Date.now(),createdAt:new Date().toISOString(),updatedAt:new Date().toISOString(),status:'new'};
+  orders.unshift(o);saveOrders(orders);
+  bc.postMessage({type:'ORDER_CREATED',payload:o});
+  notify('New Order!',o.id+' · '+o.customerName,'new');
+  renderAll();
+}
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+function init(){
+  bc=new BroadcastChannel(CH);
+  bc.onmessage=(e)=>{
+    const{type,payload}=e.data;
+    if(type==='ORDER_CREATED'){
+      notify('New Order!',`${payload.id} · ${payload.customerName||'Customer'} · ${(payload.items||[]).length} item(s)`,'new');
+    }
+    if(type==='ORDER_UPDATED'&&(payload.status==='picked_up'||payload.status==='delivered')){
+      notify('Rider Update',`${payload.id} — ${payload.status==='picked_up'?'Picked up by '+(payload.rider||'rider'):'Delivered ✓'}`,'rider');
+    }
+    renderAll();
+  };
+  renderAll();
+  setInterval(renderAll,15000); // refresh timers every 15s
+}
+</script>
+</body>
+</html>
