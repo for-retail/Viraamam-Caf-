@@ -356,17 +356,17 @@ footer p{margin-bottom:0.3rem;}
 <!-- DELIVERY / PICKUP ADDRESS SECTION -->
 <div class="delivery-wrap" id="deliveryWrap">
   <h2 class="sec-title">Delivery Details</h2>
-  <p class="sec-sub">We deliver within 8 km of Viraamam Café, Chennai</p>
+  <p class="sec-sub">We deliver within 8 km of Viraamam Café, Venkatagiri</p>
   <div class="map-addr-grid">
     <div>
       <div class="map-box">
         <iframe src="https://maps.google.com/maps?q=13.0827,80.2707&z=14&output=embed" title="Map" loading="lazy"></iframe>
-        <div class="map-lbl">📍 Viraamam Café, Chennai</div>
+        <div class="map-lbl">📍 Viraamam Café, Venkatagiri</div>
       </div>
     </div>
     <div class="info-card">
       <h3>📍 Our Location</h3>
-      <div class="info-row"><div class="info-icon">🏪</div><div class="info-text"><strong>Address</strong><span>12, Anna Nagar East, Chennai - 600102</span></div></div>
+      <div class="info-row"><div class="info-icon">🏪</div><div class="info-text"><strong>Address</strong><span>Venkatagiri , Tirupati , 524132</span></div></div>
       <div class="info-row"><div class="info-icon">🕐</div><div class="info-text"><strong>Hours</strong><span>Mon–Sun: 8:00 AM – 10:00 PM</span></div></div>
       <div class="info-row"><div class="info-icon">📞</div><div class="info-text"><strong>Phone</strong><span>+91 98765 43210</span></div></div>
       <div class="info-row"><div class="info-icon">⏱️</div><div class="info-text"><strong>Est. Delivery Time</strong><span>30–45 minutes</span></div></div>
@@ -378,7 +378,7 @@ footer p{margin-bottom:0.3rem;}
       <div class="ff"><label>Full Name</label><input type="text" id="dName" placeholder="Your full name"></div>
       <div class="ff"><label>Phone Number</label><input type="tel" id="dPhone" placeholder="+91 XXXXX XXXXX"></div>
       <div class="ff full"><label>Delivery Address</label><textarea id="dAddr" rows="2" placeholder="House/Flat No., Street, Area"></textarea></div>
-      <div class="ff"><label>City</label><input type="text" id="dCity" value="Chennai" placeholder="City"></div>
+      <div class="ff"><label>City</label><input type="text" id="dCity" value="Venkatagiri" placeholder="City"></div>
       <div class="ff"><label>PIN Code</label><input type="text" id="dPin" placeholder="600XXX" maxlength="6"></div>
       <div class="ff"><label>Delivery Time</label><select id="dTime"><option>ASAP (30–45 mins)</option><option>In 1 hour</option><option>Schedule for later</option></select></div>
       <div class="ff"><label>Special Instructions</label><textarea id="dInstr" rows="1" placeholder="Ring bell, leave at door, etc."></textarea></div>
@@ -610,7 +610,7 @@ footer p{margin-bottom:0.3rem;}
 <footer id="footer">
   <div class="fl">☕ Viraamam Café</div>
   <p>Where Every Sip Tells a Story</p>
-  <p style="margin-top:0.5rem;font-size:0.85rem;">📍 Chennai, Tamil Nadu &nbsp;|&nbsp; 🕐 8AM–10PM Daily</p>
+  <p style="margin-top:0.5rem;font-size:0.85rem;">📍 Venkatagiri , Tirupati &nbsp;|&nbsp; 🕐 8AM–10PM Daily</p>
   <div class="flinks"><a href="#">Home</a><a href="#">Menu</a><a href="#">Careers</a><a href="#">Contact</a></div>
   <div class="fcopy">© 2025 Viraamam Café · All rights reserved</div>
 </footer>
@@ -785,7 +785,7 @@ function gotoPayment(){
   document.getElementById('pSub').textContent='₹'+s;document.getElementById('pDel').textContent='₹'+d;document.getElementById('pGST').textContent='₹'+g;
   document.getElementById('upiAmt').textContent='₹'+grand;
   document.getElementById('paySummItems').innerHTML=Object.values(cart).map(i=>`<div class="osi-row"><span class="osi-name">${i.e} ${i.n} ×${i.qty}</span><span class="osi-amt">₹${i.p*i.qty}</span></div>`).join('');
-  const n=document.getElementById('dName')?.value||'',a=document.getElementById('dAddr')?.value||'',c=document.getElementById('dCity')?.value||'Chennai',pin=document.getElementById('dPin')?.value||'';
+  const n=document.getElementById('dName')?.value||'',a=document.getElementById('dAddr')?.value||'',c=document.getElementById('dCity')?.value||'Venkatagiri',pin=document.getElementById('dPin')?.value||'';
   const addrSec=document.getElementById('payAddrSec');
   if(mode==='dine'){addrSec.style.display='none';}else{addrSec.style.display='block';document.getElementById('payAddrTxt').textContent=`${n||'Guest'} · ${a||'Address not entered'}, ${c} ${pin}`;}
   document.getElementById('paymentPage').classList.add('show');window.scrollTo(0,0);
@@ -817,7 +817,7 @@ function placeOrderFinal(){
   const order={
     customerName:document.getElementById('dName')?.value||document.getElementById('dineName')?.value||'Guest',
     phone:document.getElementById('dPhone')?.value||document.getElementById('dinePhone')?.value||'',
-    address:mode!=='dine'?(document.getElementById('dAddr')?.value||'')+', '+(document.getElementById('dCity')?.value||'Chennai')+' '+(document.getElementById('dPin')?.value||''):'Dine In – Table '+selTable,
+    address:mode!=='dine'?(document.getElementById('dAddr')?.value||'')+', '+(document.getElementById('dCity')?.value||'Venkatagiri')+' '+(document.getElementById('dPin')?.value||''):'Dine In – Table '+selTable,
     mode,items,subtotal:s,delivery:d,gst:g,total:s+d+g,
     payMethod:selPay,
   };
